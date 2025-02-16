@@ -6,11 +6,27 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 # find dependencies
+find_package(ament_cmake_auto REQUIRED)
+ament_auto_find_build_dependencies()
 find_package(ament_cmake REQUIRED)
+find_package(judger REQUIRED)
+find_package(judger_interfaces REQUIRED)
+find_package(rclcpp REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
 
+# 包含头文件目录
+include_directories(include/transportation_hub)
+include_directories(${EIGEN3_INCLUDE_DIR})
+
+install(DIRECTORY launch DESTINATION share/${PROJECT_NAME}/launch)
+
+ament_auto_add_executable(${PROJECT_NAME}_node src/dijkstra.cpp)
+target_link_libraries(${PROJECT_NAME}_node ${PROJECT_SOURCE_DIR}/lib/libjudger.so)
+
+ament_auto_add_executable(${PROJECT_NAME}_test src/test.cpp)
+target_link_libraries(${PROJECT_NAME}_test ${PROJECT_SOURCE_DIR}/lib/libjudger.so)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
